@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanta — o launcher que é um terminal</title>
+<meta name="description" content="Vanta: um launcher Android que é um terminal. Um prompt para tudo — busca fuzzy, calculadora, shell, temas com faíscas e um logo 3D em ASCII. 560 testes, zero permissões próprias.">
+<style>
+  :root{
+    --bg:#0A0A14; --fg:#E6F2F5; --dim:#565280; --accent:#00F0FF;
+    --failure:#FF2A6D; --hint:#FCEE0A; --panel:#10101E;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--fg);
+    font-family:ui-monospace,'Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace;
+    line-height:1.6; font-size:15px;
+  }
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:980px; margin:0 auto; padding:0 20px}
+  header{padding:64px 0 32px; text-align:center}
+  #spin{
+    color:var(--dim); font-size:13px; line-height:1.15; letter-spacing:1px;
+    display:inline-block; text-align:left; min-height:196px; margin-bottom:8px;
+    user-select:none;
+  }
+  #spin b{color:var(--accent); font-weight:normal; text-shadow:0 0 9px rgba(0,240,255,.55)}
+  h1{
+    font-size:clamp(40px,8vw,72px); letter-spacing:.35em; font-weight:normal;
+    color:var(--accent); text-shadow:0 0 18px rgba(0,240,255,.45);
+  }
+  .tagline{color:var(--fg); margin-top:10px; font-size:17px}
+  .tagline em{color:var(--hint); font-style:normal}
+  .badges{margin-top:22px; color:var(--dim); font-size:13px}
+  .badges span{white-space:nowrap}
+  .badges span+span::before{content:" · "; color:var(--dim)}
+  .rule{border:0; border-top:1px solid rgba(86,82,128,.4); margin:48px 0}
+  section{padding:8px 0}
+  h2{
+    color:var(--dim); font-weight:normal; font-size:15px; margin:32px 0 18px;
+    letter-spacing:.08em;
+  }
+  h2::before{content:"── "; color:rgba(86,82,128,.6)}
+  h2::after{content:" ─────────────────────────"; color:rgba(86,82,128,.35)}
+  h2 b{color:var(--accent); font-weight:normal}
+  p{margin:12px 0; color:#c8d4da}
+  p b{color:var(--fg); font-weight:600}
+  .prompt-demo{
+    background:var(--panel); border:1px solid rgba(86,82,128,.35); border-radius:8px;
+    padding:18px 22px; margin:18px 0; overflow-x:auto; font-size:14px; line-height:1.9;
+    white-space:pre;
+  }
+  .prompt-demo .m{color:var(--accent)}
+  .prompt-demo .c{color:var(--accent); text-shadow:0 0 8px rgba(0,240,255,.4)}
+  .prompt-demo .h{color:var(--hint)}
+  .prompt-demo .d{color:var(--dim)}
+  .prompt-demo .f{color:var(--failure)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; margin:20px 0}
+  figure{
+    background:var(--panel); border:1px solid rgba(86,82,128,.35); border-radius:10px;
+    overflow:hidden;
+  }
+  figure img{width:100%; display:block}
+  figcaption{padding:10px 14px; font-size:13px; color:var(--dim)}
+  figcaption b{color:var(--fg); font-weight:600; display:block}
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.5px}
+  th{color:var(--dim); text-align:left; font-weight:normal; padding:6px 10px;
+     border-bottom:1px solid rgba(86,82,128,.4)}
+  td{padding:6px 10px; border-bottom:1px solid rgba(86,82,128,.18); vertical-align:top}
+  td:first-child{color:var(--accent); white-space:nowrap}
+  td .alias{color:var(--dim)}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:18px 0}
+  .card{
+    background:var(--panel); border:1px solid rgba(86,82,128,.35); border-radius:10px;
+    padding:16px 18px; font-size:13.5px;
+  }
+  .card h3{color:var(--hint); font-size:13.5px; font-weight:600; margin-bottom:8px}
+  .card p{font-size:13.5px; margin:6px 0}
+  .num{color:var(--accent); font-size:22px; display:block; text-shadow:0 0 10px rgba(0,240,255,.35)}
+  .cta{
+    display:inline-block; border:1px solid var(--dim); border-radius:8px;
+    padding:12px 26px; margin:10px 8px 0 0; color:var(--dim); font-size:14px;
+  }
+  .cta.on{border-color:var(--accent); color:var(--accent);
+    box-shadow:0 0 14px rgba(0,240,255,.18)}
+  footer{padding:40px 0 56px; color:var(--dim); font-size:12.5px; text-align:center}
+  footer p{color:var(--dim); font-size:12.5px}
+  @media (prefers-reduced-motion: reduce){ /* o JS respeita; nada a esconder */ }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <pre id="spin" aria-hidden="true"></pre>
+  <h1>VANTA</h1>
+  <p class="tagline">E se a tela inicial do seu Android fosse <em>um terminal</em>?</p>
+  <p class="badges">
+    <span>560 testes JVM</span><span>27 ADRs</span><span>0 permissões próprias</span>
+    <span>Android 8.0+</span><span>cold start ~300&nbsp;ms</span>
+  </p>
+</header>
+
+<div class="wrap">
+<hr class="rule">
+
+<section>
+  <h2><b>um prompt</b> para tudo</h2>
+  <p>Vanta é um launcher Android reescrito do zero em Kotlin a partir de um projeto Java
+  abandonado. A aposta: <b>um único prompt</b> que encontra, calcula, executa e configura —
+  sem modos, sem verbos obrigatórios, sem grade de ícones como centro do universo.</p>
+  <div class="prompt-demo"><span class="m">&gt;</span> <span class="c">camera</span>                     <span class="d">dobra de acentos: encontra e abre "Câmera"</span>
+<span class="m">&gt;</span> gm                         <span class="d">iniciais fuzzy: abre o Google Maps</span>
+<span class="m">&gt;</span> hepl                       <span class="f">hepl: command not found</span> <span class="d">/ did you mean</span> <span class="c">help</span><span class="d">?</span>
+<span class="m">&gt;</span> <span class="h">(1500-320)*0,15</span>            <span class="d">= 177 — calculadora antes da busca, vírgula decimal</span>
+<span class="m">&gt;</span> <span class="c">sh</span> ps | wc -l               <span class="d">shell no toybox do próprio aparelho</span>
+<span class="m">&gt;</span> <span class="c">termux</span> uname -a             <span class="d">e uma ponte para um userland de verdade</span>
+<span class="m">&gt;</span> <span class="c">note</span> pix do estacionamento  <span class="d">anotado — e persiste</span>
+<span class="m">&gt;</span> <span class="c">theme</span> vanta cyberpunk       <span class="d">repinta tudo, e lembra</span></div>
+  <p>A busca resolve apps <b>e</b> telas de configuração juntos, ranqueados por uma única
+  política explicável — frequência e recência ajudam, mas nunca vencem o que você digitou.
+  Erros de digitação corrigem (<b>distância de edição</b>), acentos dobram
+  (<b>camera → Câmera</b>), e uma consulta solta só age sobre um match ancorado em início
+  de palavra — para <code>opne</code> virar sugestão de <code>open</code>, nunca "Sobre o
+  telefone".</p>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>em <b>movimento</b></h2>
+  <div class="grid">
+    <figure><img src="media/calc.gif" alt="Aritmética respondida direto no prompt" loading="lazy">
+      <figcaption><b>A calculadora vem antes da busca</b>2+2, expressões com vírgula decimal, raiz e pi — respondidos no prompt, com realce semântico por token.</figcaption></figure>
+    <figure><img src="media/juice.gif" alt="Faíscas ao digitar e LEVEL UP" loading="lazy">
+      <figcaption><b>O espetáculo</b>Digitar solta faíscas, apagar detona, XP por caractere e LEVEL UP com fogos. Sem som, nunca.</figcaption></figure>
+    <figure><img src="media/themes.gif" alt="Quatro temas repintando ao vivo" loading="lazy">
+      <figcaption><b>Temas que repintam ao vivo</b>vanta cyberpunk (padrão), vanta, amber e paper — no claro, o glow se desliga sozinho por luminância.</figcaption></figure>
+    <figure><img src="media/panels.gif" alt="Gaveta de apps e bloco de notas" loading="lazy">
+      <figcaption><b>Gaveta à direita, notas à esquerda</b>Apps como botões monocromáticos com a marca do ícone; bloco de notas com colar da área de transferência em um toque.</figcaption></figure>
+    <figure><img src="media/hud.gif" alt="Painel de instrumentos dobrando" loading="lazy">
+      <figcaption><b>O painel dobra</b>Até 20 medidores sondados por aparelho, dobrados em 4 linhas de famílias — um toque abre o layout completo.</figcaption></figure>
+    <figure><img src="media/spin.gif" alt="O V girando em 3D ASCII" loading="lazy">
+      <figcaption><b>O ocioso tem assinatura</b>O V em 3D ASCII, z-buffer e rampa soletrando "vanta". Custo medido: 21% de um núcleo pequeno. <code>spin off</code> desliga.</figcaption></figure>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>o <b>vocabulário</b></h2>
+  <table>
+    <tr><th>comando</th><th>o que faz</th></tr>
+    <tr><td>go <span class="alias">(g, find)</span></td><td>encontra e abre qualquer coisa pelo nome — é para onde toda linha desconhecida cai</td></tr>
+    <tr><td>open <span class="alias">(o, launch)</span></td><td>força o domínio de apps</td></tr>
+    <tr><td>settings <span class="alias">(set)</span></td><td>abre telas de configuração do sistema</td></tr>
+    <tr><td>calc <span class="alias">(=)</span></td><td>aritmética explícita — implícita, qualquer expressão no prompt já responde</td></tr>
+    <tr><td>search <span class="alias">(s)</span></td><td>entrega a consulta ao seu app de busca padrão</td></tr>
+    <tr><td>sh <span class="alias">(run)</span></td><td>executa no toybox do aparelho — 196 applets, diretório persistente</td></tr>
+    <tr><td>termux <span class="alias">(tx)</span></td><td>executa no Termux e imprime stdout, stderr e exit code aqui</td></tr>
+    <tr><td>note <span class="alias">(n)</span></td><td>anota verbatim; sem argumento, lê o bloco</td></tr>
+    <tr><td>theme / hud / spin</td><td>configuração como texto: o que se mostra é o que se cola de volta</td></tr>
+    <tr><td>apps · battery · about · clear · cd · pwd · help</td><td>o resto do essencial — e o help é gerado das mesmas specs que o parser lê, então nunca mente</td></tr>
+  </table>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>engenharia <b>honesta</b></h2>
+  <div class="cards">
+    <div class="card"><span class="num">560</span>
+      <h3>testes sem emulador</h3>
+      <p>O núcleo (comando, matching, render, cálculo) é JVM pura — parser total,
+      ranking, temas, partículas e o giro 3D testados a zero fps em qualquer máquina.</p></div>
+    <div class="card"><span class="num">27</span>
+      <h3>registros de decisão</h3>
+      <p>Cada escolha de arquitetura documentada com o bug que a motivou — inclusive
+      as decisões revertidas, que ficam marcadas como superadas, nunca apagadas.</p></div>
+    <div class="card"><span class="num">21%</span>
+      <h3>energia medida, não estimada</h3>
+      <p>A primeira versão do logo custava 96% de um núcleo a 1,82&nbsp;GHz. Quatro rodadas
+      de medição no aparelho depois: 21% no clock mínimo — e a conta virou commit.</p></div>
+    <div class="card"><span class="num">0</span>
+      <h3>permissões próprias</h3>
+      <p>Nenhuma coleta, nenhum tracker, nenhuma rede. A única permissão do manifesto
+      pertence ao Termux — e fica inerte sem ele.</p></div>
+    <div class="card"><span class="num">~300ms</span>
+      <h3>cold start</h3>
+      <p>Lista de apps em cache com leitura autoritativa fora do caminho de partida;
+      medido com baseline profile e método documentado (aquecer, compilar, medir).</p></div>
+    <div class="card"><span class="num">60fps</span>
+      <h3>movimento é notícia</h3>
+      <p>Nada anima em loop escondido: faíscas nascem de teclas, o relógio de quadros
+      para quando nada acontece, e tudo respeita a escala de animação do sistema.</p></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>o que vem <b>por aí</b></h2>
+  <p>Aliases e dotfiles (a configuração inteira exportável como texto), conversão de
+  unidades no mesmo degrau da calculadora, domínios de contatos e arquivos, scripts com
+  gatilhos — e a publicação na Play Store.</p>
+  <p style="margin-top:20px">
+    <span class="cta on">release v0.1.0 — assinada</span>
+    <span class="cta">download público em breve</span>
+  </p>
+</section>
+
+<hr class="rule">
+
+<footer>
+  <p>© 2026 Mark Ráyner Mesquita — todos os direitos reservados.</p>
+  <p>Código fonte disponível para leitura (source-available); binários oficiais de release
+  livres para uso pessoal. <a href="privacidade.html">Política de privacidade</a></p>
+</footer>
+</div>
+
+<script>
+// O herói da página é o próprio espetáculo do ocioso: um port fiel do Spin.kt.
+// Mesma nuvem de pontos, mesmo z-buffer, mesma rampa soletrando o nome.
+(function(){
+  const el = document.getElementById('spin');
+  const COLS = 34, ROWS = 13;
+  const RAMP = "vanta";
+  const TURN = 6000, LEAN = 0.18, FOCAL = 3.2, HALF = 0.30;
+  const leanS = Math.sin(LEAN), leanC = Math.cos(LEAN);
+
+  // O V: dois traços que se encontram no pé, extrudados; o trilho interno morre
+  // no vértice — um V com haste é um Y.
+  const MODEL = [];
+  for (let stroke = 0; stroke < 2; stroke++) {
+    const topX = stroke === 0 ? -1.0 : 1.0;
+    for (let i = 0; i <= 26; i++) {
+      const t = i / 26, x = topX * (1 - t), y = 0.82 - 1.64 * t;
+      for (let l = 0; l <= 7; l++) {
+        const z = -HALF + (2 * HALF) * l / 7;
+        MODEL.push([x, y, z]);
+        MODEL.push([x + (topX < 0 ? 0.16 : -0.16) * (1 - t), y, z]);
+      }
+    }
+  }
+
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scale = Math.min(ROWS * 0.44, COLS / 2 * 0.44);
+
+  function frame(ms){
+    const a = still ? 0.55 : (ms % TURN) * 2 * Math.PI / TURN;
+    const sA = Math.sin(a), cA = Math.cos(a);
+    const glyph = new Array(COLS * ROWS).fill(' ');
+    const near  = new Array(COLS * ROWS).fill(false);
+    const depth = new Array(COLS * ROWS).fill(Infinity);
+
+    for (const [px, py, pz] of MODEL) {
+      const yx = px * cA + pz * sA, yz = -px * sA + pz * cA;
+      const ly = py * leanC - yz * leanS, lz = py * leanS + yz * leanC;
+      const zoom = FOCAL / (FOCAL + lz);
+      const col = Math.floor(COLS / 2 + yx * zoom * scale * 2);
+      const row = Math.floor(ROWS / 2 - ly * zoom * scale);
+      if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
+      const cell = row * COLS + col;
+      if (lz >= depth[cell]) continue;
+      depth[cell] = lz;
+      const n = Math.min(1, Math.max(0, (HALF - lz) / (2 * HALF)));
+      glyph[cell] = RAMP[Math.floor(n * (RAMP.length - 1))];
+      near[cell]  = n > 0.5;
+    }
+
+    let html = '';
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const i = r * COLS + c, g = glyph[i];
+        html += near[i] ? '<b>' + g + '</b>' : g;
+      }
+      html += '\n';
+    }
+    el.innerHTML = html;
+  }
+
+  if (still) { frame(0); return; }
+  const born = performance.now();
+  (function loop(now){ frame(now - born); requestAnimationFrame(loop); })(born);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanta — Política de Privacidade</title>
+<style>
+  :root{--bg:#0A0A14;--fg:#E6F2F5;--dim:#565280;--accent:#00F0FF}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);
+    font-family:ui-monospace,'Cascadia Mono',Consolas,Menlo,monospace;
+    line-height:1.7;font-size:15px}
+  .wrap{max-width:760px;margin:0 auto;padding:56px 20px}
+  h1{color:var(--accent);font-weight:normal;font-size:26px;margin-bottom:6px}
+  .updated{color:var(--dim);font-size:13px;margin-bottom:28px}
+  h2{color:var(--dim);font-weight:normal;font-size:15px;margin:26px 0 10px}
+  h2::before{content:"── ";color:rgba(86,82,128,.6)}
+  p{margin:10px 0;color:#c8d4da}
+  b{color:var(--fg)}
+  a{color:var(--accent);text-decoration:none}
+  ul{margin:10px 0 10px 22px;color:#c8d4da}
+  li{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Política de Privacidade — Vanta</h1>
+  <p class="updated">Última atualização: 29 de agosto de 2026</p>
+
+  <p>Esta é a política de privacidade mais curta que conseguimos escrever com
+  honestidade, porque o Vanta foi projetado para não ter o que esconder.</p>
+
+  <h2>O que coletamos</h2>
+  <p><b>Nada.</b> O Vanta não coleta, não armazena em servidores, não transmite e não
+  compartilha nenhum dado pessoal. O aplicativo não contém rastreadores, não contém
+  bibliotecas de analytics, não contém publicidade e não faz nenhuma conexão de rede
+  própria.</p>
+
+  <h2>O que fica só no seu aparelho</h2>
+  <ul>
+    <li><b>Histórico de uso de apps</b> — frequência e recência do que você abre, usado
+    apenas para ordenar sugestões. Nunca sai do aparelho.</li>
+    <li><b>Notas</b> — o que você escreve no bloco de notas. Nunca sai do aparelho.</li>
+    <li><b>Configurações</b> — tema, medidores e preferências. Nunca saem do aparelho.</li>
+  </ul>
+  <p>Todos esses dados são excluídos quando você limpa os dados do app ou o desinstala.
+  O Vanta desativa explicitamente o backup automático do Android
+  (<code>allowBackup=false</code>), então nada disso vai para a nuvem por vias do
+  sistema.</p>
+
+  <h2>Área de transferência</h2>
+  <p>O botão "paste" do bloco de notas lê a área de transferência <b>somente</b> quando
+  você o toca, em primeiro plano, e o conteúdo vira uma nota local. Nada é lido em
+  segundo plano ou por temporizador.</p>
+
+  <h2>Permissões</h2>
+  <p>O Vanta não solicita nenhuma permissão do Android própria. A única entrada no
+  manifesto é a permissão de integração definida pelo app Termux
+  (<code>com.termux.permission.RUN_COMMAND</code>), usada exclusivamente se você
+  invocar o comando <code>termux</code> — e inerte se o Termux não estiver instalado.</p>
+
+  <h2>Crianças</h2>
+  <p>O Vanta não coleta dados de ninguém — inclusive de crianças.</p>
+
+  <h2>Mudanças nesta política</h2>
+  <p>Se o Vanta um dia mudar o que faz com dados, esta página mudará antes, com a data
+  acima atualizada.</p>
+
+  <h2>Contato</h2>
+  <p>Dúvidas sobre esta política: abra um contato pelo perfil
+  <a href="https://github.com/codexmark">github.com/codexmark</a>.</p>
+</div>
+</body>
+</html>
