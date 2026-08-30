@@ -316,7 +316,17 @@
   }
 
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const scale = Math.min(ROWS * 0.44, COLS / 2 * 0.44);
+
+  // A proporção da célula é medida na fonte real do navegador, nunca presumida —
+  // a lição veio de um Samsung que espremeu o V numa listra.
+  const probe = document.createElement('span');
+  probe.textContent = '0000000000';
+  el.appendChild(probe);
+  const pw = probe.getBoundingClientRect().width / 10;
+  const ph = parseFloat(getComputedStyle(el).fontSize) * 1.15;
+  el.removeChild(probe);
+  const CELL = (pw > 0 && ph > 0) ? ph / pw : 2.0;
+  const scale = Math.min(ROWS * 0.44, COLS / CELL * 0.44);
 
   function frame(ms){
     const a = still ? 0.55 : (ms % TURN) * 2 * Math.PI / TURN;
@@ -329,7 +339,7 @@
       const yx = px * cA + pz * sA, yz = -px * sA + pz * cA;
       const ly = py * leanC - yz * leanS, lz = py * leanS + yz * leanC;
       const zoom = FOCAL / (FOCAL + lz);
-      const col = Math.floor(COLS / 2 + yx * zoom * scale * 2);
+      const col = Math.floor(COLS / 2 + yx * zoom * scale * CELL);
       const row = Math.floor(ROWS / 2 - ly * zoom * scale);
       if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
       const cell = row * COLS + col;
