@@ -44,17 +44,18 @@
 
 <header class="wrap">
   <h1>GALERIA</h1>
-  <p class="tagline">Temas do Vanta — <em>copie o texto, cole no launcher</em>. Um tema é um arquivo que cabe num comentário.</p>
+  <p class="tagline">Temas do Vanta — <em>copie, e no launcher digite</em> <code style="color:var(--hint)">theme -add</code>. Só isso.</p>
   <a class="back" href="index.html">&larr; voltar ao site</a>
 </header>
 
 <div class="wrap">
   <div class="grid" id="grid"></div>
 
-  <p class="how"><b>Como usar:</b> toque em <b>copiar tema</b>, e no Vanta cole dentro de um
-  documento <code>rc</code> (seção <code>[theme]</code>) e rode <code>rc -load</code> — ou
-  monte o seu: mude qualquer cor, todo campo é opcional, e um erro custa uma cor, nunca o
-  launcher. <code>theme -export</code> no aparelho copia o seu para compartilhar de volta.</p>
+  <p class="how"><b>Como usar:</b> toque em <b>copiar tema</b>, abra o Vanta e digite
+  <code>theme -add</code>. Pronto — o tema entra sozinho, sem internet, sem arquivo.
+  (Colar o texto direto no prompt também funciona.) Quer o seu? Mude qualquer cor —
+  todo campo é opcional, e um erro custa uma cor, nunca o launcher —
+  e <code>theme -export</code> copia o resultado para compartilhar de volta.</p>
 </div>
 
 <footer>© 2026 Mark Ráyner Mesquita — todos os direitos reservados.</footer>
@@ -113,7 +114,7 @@ for (const t of THEMES) {
   const badge = card.querySelector(".copied");
   button.addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText("[theme]\n" + t.text + "\n");
+      await navigator.clipboard.writeText(t.text + "\n");
       badge.style.opacity = "1";
       setTimeout(() => { badge.style.opacity = "0"; }, 1600);
     } catch (e) {
