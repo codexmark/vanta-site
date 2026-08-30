@@ -45,7 +45,7 @@
 <header class="wrap">
   <h1>GALERIA</h1>
   <p class="tagline">Temas do Vanta — <em>copie, e no launcher digite</em> <code style="color:var(--hint)">theme -add</code>. Só isso.</p>
-  <a class="back" href="index.html">&larr; voltar ao site</a>
+  <a class="back" href="index.html">&larr; voltar ao site</a> · <a class="back" href="gerador.html" style="color:var(--accent)">criar o meu no gerador &rarr;</a>
 </header>
 
 <div class="wrap">
@@ -62,6 +62,78 @@
 
 <script>
 const THEMES = [
+  { id:"dracula", name:"dracula", note:"o dark mais portado do mundo",
+    text:`name       = dracula
+background = #282A36
+foreground = #F8F8F2
+dim        = #6272A4
+accent     = #BD93F9
+failure    = #FF5555
+hint       = #FFB86C
+fx         = off` },
+  { id:"catppuccin", name:"catppuccin mocha", note:"o fenômeno pastel da década",
+    text:`name       = catppuccin mocha
+background = #1E1E2E
+foreground = #CDD6F4
+dim        = #6C7086
+accent     = #CBA6F7
+failure    = #F38BA8
+hint       = #F9E2AF
+fx         = off` },
+  { id:"gruvbox", name:"gruvbox", note:"retro groove, quente como válvula",
+    text:`name       = gruvbox
+background = #282828
+foreground = #EBDBB2
+dim        = #928374
+accent     = #FE8019
+failure    = #FB4934
+hint       = #FABD2F
+fx         = off` },
+  { id:"nord", name:"nord", note:"frio ártico, calmo e legível",
+    text:`name       = nord
+background = #2E3440
+foreground = #D8DEE9
+dim        = #4C566A
+accent     = #88C0D0
+failure    = #BF616A
+hint       = #EBCB8B
+fx         = off` },
+  { id:"tokyonight", name:"tokyo night", note:"o azul neon da era Neovim",
+    text:`name       = tokyo night
+background = #1A1B26
+foreground = #C0CAF5
+dim        = #565F89
+accent     = #7AA2F7
+failure    = #F7768E
+hint       = #E0AF68
+fx         = off` },
+  { id:"rosepine", name:"rosé pine", note:"pinho, veludo e um toque soho",
+    text:`name       = rose pine
+background = #191724
+foreground = #E0DEF4
+dim        = #908CAA
+accent     = #C4A7E7
+failure    = #EB6F92
+hint       = #F6C177
+fx         = off` },
+  { id:"synthwave", name:"synthwave '84", note:"neon rosa — e as faíscas já vêm ligadas",
+    text:`name       = synthwave 84
+background = #262335
+foreground = #FFFFFF
+dim        = #848BBD
+accent     = #FF7EDB
+failure    = #FE4450
+hint       = #FEDE5D
+fx         = on` },
+  { id:"hicontrast", name:"high contrast", note:"contraste máximo, preto AMOLED",
+    text:`name       = high contrast
+background = #0A0C10
+foreground = #F0F3F6
+dim        = #9EA7B3
+accent     = #71B7FF
+failure    = #FF6A69
+hint       = #F0B72F
+fx         = off` },
   { id:"cyberpunk", name:"vanta cyberpunk", note:"o padrão: neon, faíscas, fogos",
     text:`name       = vanta cyberpunk
 background = #0A0A14
