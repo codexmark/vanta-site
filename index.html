@@ -85,6 +85,9 @@
   }
   .cta.on{border-color:var(--accent); color:var(--accent);
     box-shadow:0 0 14px rgba(0,240,255,.18)}
+  a.cta{text-decoration:none; cursor:pointer}
+  a.cta.on:hover{background:rgba(0,240,255,.08)}
+  .shasum{color:var(--dim); font-size:11.5px; word-break:break-all; margin-top:10px}
   footer{padding:40px 0 56px; color:var(--dim); font-size:12.5px; text-align:center}
   footer p{color:var(--dim); font-size:12.5px}
   @media (prefers-reduced-motion: reduce){ /* o JS respeita; nada a esconder */ }
@@ -97,8 +100,11 @@
   <h1>VANTA</h1>
   <p class="tagline">E se a tela inicial do seu Android fosse <em>um terminal</em>?</p>
   <p class="badges">
-    <span>560 testes JVM</span><span>27 ADRs</span><span>0 permissões próprias</span>
+    <span>636 testes JVM</span><span>30 ADRs</span><span>0 permissões na instalação</span>
     <span>Android 8.0+</span><span>cold start ~300&nbsp;ms</span>
+  </p>
+  <p style="margin-top:18px">
+    <a class="cta on" href="https://github.com/codexmark/vanta-site/releases/latest/download/vanta.apk">&#8681; baixar o APK assinado</a>
   </p>
 </header>
 
@@ -117,6 +123,10 @@
 <span class="m">&gt;</span> <span class="h">(1500-320)*0,15</span>            <span class="d">= 177 — calculadora antes da busca, vírgula decimal</span>
 <span class="m">&gt;</span> <span class="c">sh</span> ps | wc -l               <span class="d">shell no toybox do próprio aparelho</span>
 <span class="m">&gt;</span> <span class="c">termux</span> uname -a             <span class="d">e uma ponte para um userland de verdade</span>
+<span class="m">&gt;</span> <span class="h">12 km em mi</span>                <span class="d">= 7.45645430685 mi — unidades no degrau da calculadora</span>
+<span class="m">&gt;</span> <span class="c">alias</span> zap = open whatsapp  <span class="d">ensina uma palavra; "zap grupo" passa a expandir</span>
+<span class="m">&gt;</span> <span class="c">script</span> @power = battery    <span class="d">um script amarrado a um momento: plugou, rodou</span>
+<span class="m">&gt;</span> <span class="c">rc</span>                         <span class="d">a config inteira como texto — e rc -load traz de volta</span>
 <span class="m">&gt;</span> <span class="c">note</span> pix do estacionamento  <span class="d">anotado — e persiste</span>
 <span class="m">&gt;</span> <span class="c">theme</span> vanta cyberpunk       <span class="d">repinta tudo, e lembra</span></div>
   <p>A busca resolve apps <b>e</b> telas de configuração juntos, ranqueados por uma única
@@ -271,14 +281,24 @@
 <hr class="rule">
 
 <section>
-  <h2>o que vem <b>por aí</b></h2>
-  <p>Aliases e dotfiles (a configuração inteira exportável como texto), conversão de
-  unidades no mesmo degrau da calculadora, domínios de contatos e arquivos, scripts com
-  gatilhos — e a publicação na Play Store.</p>
+  <h2>baixar e <b>instalar</b></h2>
+  <p>A 0.2.0 entregou o que a página prometia: <b>conversão de unidades</b> no mesmo
+  degrau da calculadora (<code>12 km em mi</code>, <code>38c em f</code>, vírgula
+  decimal, até <code>arroba</code>), <b>aliases</b> que acendem e completam como
+  comandos nativos, <b>scripts com gatilhos</b> reais (<code>@start</code>,
+  <code>@resume</code>, <code>@power</code>, <code>@unpower</code>) narrados no
+  scrollback, o <b>dotfile <code>rc</code></b> — a configuração inteira como um
+  documento de texto que viaja pela área de transferência — e dois domínios novos que
+  <b>merecem suas permissões</b>: contatos pedem no primeiro uso, arquivos só enxergam
+  as pastas que você entregar pelo seletor do sistema. Permissão de armazenamento,
+  nunca.</p>
   <p style="margin-top:20px">
-    <span class="cta on">release v0.1.0 — assinada</span>
-    <span class="cta">download público em breve</span>
+    <a class="cta on" href="https://github.com/codexmark/vanta-site/releases/latest/download/vanta.apk">&#8681; baixar o APK assinado</a>
+    <a class="cta" href="https://github.com/codexmark/vanta-site/releases/latest">notas da release</a>
   </p>
+  <p class="shasum">SHA-256 6da08023436fd9ce3a0eace438ea175222b1d52890a6db3b605a1137525497ca ·
+  o Android avisa sobre apps fora da Play Store — o aviso é legítimo, e a conferência
+  do hash é a resposta honesta a ele. Próxima parada: a Play Store.</p>
 </section>
 
 <hr class="rule">
