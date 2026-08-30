@@ -150,6 +150,32 @@
 <hr class="rule">
 
 <section>
+  <h2>duas camadas de <b>shell</b></h2>
+  <p>O Android moderno proíbe executar binários gravados pelo app (<b>W^X</b>), então o
+  Vanta não embarca um userland — ele alcança os dois que o aparelho já tem, e é honesto
+  sobre a diferença entre eles.</p>
+  <p><b><code>sh</code></b> executa no <b>toybox</b> do próprio sistema: 196 applets em
+  qualquer aparelho, sem instalar nada. Diretório de trabalho persistente entre chamadas,
+  limite de saída, timeout — e a linha inteira viaja verbatim, então
+  <code>sh ls -la</code> nunca tem o <code>-la</code> confundido com uma flag do
+  Vanta.</p>
+  <p><b><code>termux</code></b> atravessa a ponte para um userland de verdade: a linha
+  vai ao <code>RunCommandService</code> do Termux e <b>stdout, stderr e o exit code
+  voltam para o scrollback do Vanta</b> — você nunca sai do launcher. Três modos de
+  falha recebem três respostas distintas (instalar o app · conceder a permissão · uma
+  linha de configuração), porque "não funcionou" esconderia qual dos três aconteceu. A
+  permissão é pedida <b>no primeiro uso</b>, nunca na instalação — um launcher que exige
+  permissão antes de você pedir algo já perdeu a discussão sobre por que precisa
+  dela.</p>
+  <figure style="max-width:440px;margin:20px auto">
+    <video src="termux-demo.mp4" autoplay loop muted playsinline style="width:100%;display:block"></video>
+    <figcaption><b>As duas camadas medindo a própria diferença</b><code>sh toybox | wc -w</code> responde 196; <code>termux ls $PREFIX/bin | wc -l</code> responde 463 — com <code>pkg</code>, git, python e ssh do lado de lá. O spinner no prompt é o comando em voo.</figcaption>
+  </figure>
+</section>
+
+<hr class="rule">
+
+<section>
   <h2>o <b>vocabulário</b></h2>
   <table>
     <tr><th>comando</th><th>o que faz</th></tr>
@@ -195,6 +221,50 @@
       <h3>movimento é notícia</h3>
       <p>Nada anima em loop escondido: faíscas nascem de teclas, o relógio de quadros
       para quando nada acontece, e tudo respeita a escala de animação do sistema.</p></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <h2>o cuidado nos <b>detalhes</b></h2>
+  <div class="cards">
+    <div class="card"><h3>Uma busca que não chuta</h3>
+      <p>Consulta solta só age sobre match ancorado em início de palavra: <code>opne</code>
+      vira sugestão de <code>open</code> — nunca abre "Sobre o telefone" só porque
+      o-p-n-e é subsequência de Ab<b>o</b>ut <b>p</b>ho<b>ne</b>.</p></div>
+    <div class="card"><h3>Realce que não mente</h3>
+      <p>O primeiro token só acende se resolve como comando; depois de <code>sh</code> ou
+      <code>termux</code>, a linha estrangeira fica deliberadamente sem cor — pintar as
+      flags do toybox como entendidas seria mentir em cores.</p></div>
+    <div class="card"><h3>A gaveta ensina o prompt</h3>
+      <p>Tudo que lança — prompt, gaveta, painel — alimenta o mesmo diário de uso. O que
+      você navegou hoje, o histórico do prompt ocioso oferece amanhã, um toque para
+      relançar.</p></div>
+    <div class="card"><h3>A marca, não o ícone</h3>
+      <p>Badges monocromáticos extraídos da camada <i>foreground</i> dos ícones
+      adaptativos, tintados na cor da linha em que sentam. Ícone que desenha vazio cai
+      num caminho reserva; nada fica em branco, nada vira quadrado sem feição.</p></div>
+    <div class="card"><h3>Notas que sobrevivem</h3>
+      <p>Bloco persistido em store próprio, com os separadores que o ASCII reservou há
+      50 anos (US/RS) e sem gramática de escape — o texto do clipboard é arbitrário, o
+      formato nunca pode ser. Ids nunca reciclam: apagar nunca é ambíguo.</p></div>
+    <div class="card"><h3>Medidores sondados</h3>
+      <p>Cada linha do painel é provada no aparelho antes de oferecida — sem magnetômetro,
+      <code>mag</code> é recusado pelo nome em vez de desenhar um medidor que nunca se
+      move. Sensores assinados só com o launcher na tela; <code>onPause</code> solta
+      tudo.</p></div>
+    <div class="card"><h3>Residente que escuta</h3>
+      <p>Um launcher vive dias sem reiniciar. Instalou um app? Um receiver acorda o
+      catálogo, o badge novo é renderizado e a busca o conhece em segundos — sem
+      restart.</p></div>
+    <div class="card"><h3>Movimento com governo</h3>
+      <p>Tudo obedece a escala de animação do sistema; animação desligada significa
+      parado, nunca ausente. O relógio de quadros para quando nada revela nem roda — um
+      launcher ocioso não pode ser o que esquenta o bolso.</p></div>
+    <div class="card"><h3>Config é texto</h3>
+      <p><code>theme -show</code> imprime exatamente o que um arquivo de tema contém — e
+      o que se cola de volta. Ler nunca falha: um typo custa uma cor, não o launcher.</p></div>
   </div>
 </section>
 
